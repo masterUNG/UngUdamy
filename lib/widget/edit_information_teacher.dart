@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ungudamy/models/type_model.dart';
@@ -142,7 +144,8 @@ class _EditInformationTeacherState extends State<EditInformationTeacher> {
   Container buildTextFieldPhone() => Container(
         margin: EdgeInsets.only(bottom: 16),
         width: 250,
-        child: TextFormField(keyboardType: TextInputType.phone,
+        child: TextFormField(
+          keyboardType: TextInputType.phone,
           key: Key(phone.toString()),
           initialValue: phone,
           onChanged: (value) => phone = value.trim(),
@@ -242,7 +245,13 @@ class _EditInformationTeacherState extends State<EditInformationTeacher> {
         phone.isEmpty ||
         website.isEmpty) {
       normalDialog(context, 'Please Fill Every Blank');
-    } else {}
+    } else {
+      if (file == null) {
+        insertValueToFirestore();
+      } else {
+        uploadImageToFirebase();
+      }
+    }
   }
 
   String checkNull(String string) {
@@ -251,5 +260,35 @@ class _EditInformationTeacherState extends State<EditInformationTeacher> {
     } else {
       return string;
     }
+  }
+
+  Future<Null> uploadImageToFirebase() async {
+    int i = Random().nextInt(1000000);
+    String nameImage = 'teacher$i.jpg';
+    StorageReference reference =
+        FirebaseStorage.instance.ref().child('Teacher/$nameImage');
+    StorageUploadTask uploadTask = reference.putFile(file);
+
+    await (await uploadTask.onComplete).ref.getDownloadURL().then((value) {
+      urlAvatar = value;
+      print('urlAvata ใหม่ ==>> $urlAvatar');
+      insertValueToFirestore();
+    });
+  }
+
+  Future<Null> insertValueToFirestore() async {
+    TypeModel model = TypeModel(
+        name: name,
+        type: 'Teacher',
+        pathImage: urlAvatar,
+        education: educatChoose,
+        address: address,
+        phone: phone,
+        website: website);
+
+    Map<String, dynamic> map = model.toJson();
+    await FirebaseFirestore.instance.collection('Type').doc(uid).set(map).then(
+          (value) => Navigator.pop(context),
+        );
   }
 }
