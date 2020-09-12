@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "449425679463",
+    "firebase_url": "https://ungudamy.firebaseio.com",
+    "project_id": "ungudamy",
+    "storage_bucket": "ungudamy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:449425679463:android:9aa655d9eac9b5ba90e0c2",
+        "android_client_info": {
+          "package_name": "com.flutterthailand.ungudamy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "449425679463-jgok24blbapieff3atvha97pcrktaaj4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTUPQXLbgzJqTTig4ZuPyYt1mZWYus7KM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "449425679463-jgok24blbapieff3atvha97pcrktaaj4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
