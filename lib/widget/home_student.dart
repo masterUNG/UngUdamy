@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:ungudamy/models/type_model.dart';
 import 'package:ungudamy/utility/my_style.dart';
+import 'package:ungudamy/widget/show_teacher.dart';
 
 class HomeStudent extends StatefulWidget {
   @override
@@ -27,28 +28,56 @@ class _HomeStudentState extends State<HomeStudent> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : buildListView(),
+          : Column(
+              children: [
+                buildListView(),
+              ],
+            ),
     );
   }
 
-  ListView buildListView() {
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: typeModels.length,
-      itemBuilder: (context, index) => Column(
-        children: [
-          Container(width: 150,height: 150,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CachedNetworkImage(
-                imageUrl: typeModels[index].pathImage,
-                placeholder: (context, url) => MyStyle().showProgress(),
-                errorWidget: (context, url, error) => MyStyle().errorImage(),
+  Widget buildListView() {
+    return Container(
+      height: 200,
+      // color: Colors.red,
+      child: Expanded(
+        child: ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: typeModels.length,
+          itemBuilder: (context, index) => GestureDetector(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ShowTeacher(typeModel: typeModels[index],),
+                )),
+            child: Card(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 150,
+                      height: 150,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CachedNetworkImage(
+                          imageUrl: typeModels[index].pathImage,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              MyStyle().showProgress(),
+                          errorWidget: (context, url, error) =>
+                              MyStyle().errorImage(),
+                        ),
+                      ),
+                    ),
+                    Text(typeModels[index].name),
+                  ],
+                ),
               ),
             ),
           ),
-          Text(typeModels[index].name),
-        ],
+        ),
       ),
     );
   }
